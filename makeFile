@@ -1,0 +1,62 @@
+package mysql;
+import java.io.*;
+import java.util.*;
+import java.lang.*;
+import java.sql.*;
+public class makeFile {
+
+	private Scanner scan;
+	private Formatter x;
+	private Writer writer;
+	private FileWriter filewriter;
+	private BufferedWriter bufferedwriter;
+	public makeFile(){
+		try{
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("top_gear.txt"), "utf-8"));
+			System.out.println("You created a file ");
+		}
+		catch(Exception e){
+			System.out.println("File error");
+		}
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			
+			//get a connectoin to database
+			
+			Connection myCon = DriverManager.getConnection("jdbc:mysql://localhost/cars", "root", "");
+			
+			//create a statement
+			Statement myStatement = myCon.createStatement();
+			//execute SQL query
+			ResultSet myRs = myStatement.executeQuery("SELECT * FROM `top gear`");
+			//process result set
+			filewriter = new FileWriter("top_gear.txt");
+			bufferedwriter = new BufferedWriter(filewriter);
+			String[] row1 = {"Manufacturer", "Model", "Year", "Horse Power", "Price", "0 to 60"};
+			for(String x : row1){
+				bufferedwriter.write("[ " + x + " ]");
+				}
+			System.out.println("");
+			while(myRs.next()){
+				String top_gear =(myRs.getString("Manufacturer") + " " + myRs.getString("Model") + " " +  myRs.getString("Year") + " " + myRs.getString("Horse Power") + " " + myRs.getString("Price") + " " + myRs.getString("0 to 60"));
+				bufferedwriter.newLine();
+				bufferedwriter.write(top_gear);
+				bufferedwriter.newLine();
+			}
+			bufferedwriter.close();
+		}
+		catch(ClassNotFoundException e){
+			System.out.println("Not found");
+		}
+		catch(SQLException ex){
+			System.out.println("additoin unsuccessful");
+		}
+		catch(Exception e){
+		System.out.println("Error " + e);
+		//e.printStackTrace();
+		}
+		
+		//x.format(format, args)
+	}
+	
+}
