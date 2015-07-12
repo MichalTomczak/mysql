@@ -1,0 +1,27 @@
+package mysql;
+import java.util.*;
+import java.io.*;
+public class stig {
+
+	public stig(){
+		BufferedReader br;
+		try{
+		String stig = "C:\\Users\\Matt Williams\\Documents\\Stig_Quotes.txt";
+		List<String> myList = new LinkedList<String>();
+		 br= new BufferedReader(new FileReader("Stig_Quotes.txt"));
+		String line; 
+		while((line = br.readLine()) != null){
+		myList.add(line);
+				}
+		Random rand = new Random();
+		int i = rand.nextInt(102);
+		//myList.get(i);
+		System.out.println(myList.get(i));
+		br.close();
+			}
+		catch(Exception e){
+			System.out.println("Exception caught" + e);
+		}
+		//List<String> list = Files.readAllLines(new File("input.txt").toPath(), Charset.defaultCharset() );
+	}
+}
