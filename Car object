@@ -1,0 +1,53 @@
+package mysql;
+
+public class car implements Comparable<car>{
+
+	private String manuf;
+	private String model;
+	private int year;
+	private int hp;
+	private int zerot60;
+	private int price;
+	
+	public car(String manu, String m, int y, int h, int z, int p){
+		manuf = manu;
+		model = m;
+		year = y;
+		hp = h;
+		zerot60 = z;
+		price = p;
+	}
+	public String getManuf(){
+		return manuf;
+	}
+	public String getModel(){
+		return model;
+	}
+	public int getYear(){
+		return year;
+	}
+	public int gethp(){
+		return hp;
+	}
+	public int get0t60(){
+		return zerot60;
+	}
+	public int getPrice(){
+		return price;
+	}
+	public String toString(){
+		return "Manufacturer: " + manuf + " " + "Model: " + " " + model+ " Year: " +  year+ " " +" Horse Power: " +hp+ " " +" Zero to 60: " +zerot60+ " "  + " Price: "+price + "\n";
+		
+	}
+	@Override
+	public boolean equals(Object myCar) {
+		car car = (car) myCar;
+		return (getManuf().equals(car.getManuf()));
+	}
+	public int hashCode(){
+		return manuf.hashCode();
+	}
+	public int compareTo(car myCar){
+		return manuf.compareTo(myCar.getManuf());
+	}
+}
