@@ -1,0 +1,29 @@
+package mysql;
+import java.awt.*;
+import java.awt.Event.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+
+import javax.swing.*;
+import javax.swing.event.*;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.*;
+
+import javax.swing.JFrame;
+
+public class main extends JFrame{
+
+	public static void main(String[] args){
+		database db = new database();
+		gui3 mygui = new gui3();
+		mygui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mygui.setSize(825, 500);
+		mygui.setVisible(true);
+	}
+	
+	
+}
