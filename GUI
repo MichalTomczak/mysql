@@ -1,0 +1,362 @@
+package mysql;
+import java.awt.event.*;
+import java.util.*;
+
+import javax.swing.*;
+import javax.swing.event.*;
+
+import java.awt.GridLayout;
+
+/*	import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.factories.FormFactory;*/
+
+
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+public class gui3 extends JFrame{
+	
+
+		private JTextField txtManufacturer;
+		private JTextField txtModel;
+		private JTextField txtYear;
+		private JTextField txtHorsePower;
+		private JTextField txtTo;
+		private JTextField txtPrice;
+		private JTextField txtSearch;
+		private JTextField txtpnSortBy;
+		private database myDB;
+		private String manuf;
+		private String model;
+		private String year;
+		private String hp;
+		private String zerot60;
+		private String price;
+		private int p;
+		private int h;
+		private int z;
+		private int y;
+		private String userChoice;
+		private String searchParam;
+		private JComboBox comboBox_1;
+		private JFrame frame;
+		private ArrayList<car> carList = new ArrayList<car>(); 
+		public gui3() {
+			
+			txtManufacturer = new JTextField();
+			txtManufacturer.setText("Manufacturer");
+			txtManufacturer.setColumns(10);
+			txtManufacturer.addActionListener(
+					new ActionListener(){
+						public void actionPerformed(ActionEvent ev){
+							manuf= txtManufacturer.getText();
+						}
+					}
+					);
+			
+			txtModel = new JTextField();
+			txtModel.setText("Model");
+			txtModel.setColumns(10);
+			txtModel.addActionListener(
+					new ActionListener(){
+						public void actionPerformed(ActionEvent ev){
+							model= txtModel.getText();
+						}
+					}
+					);
+			
+			txtYear = new JTextField();
+			txtYear.setText("Year");
+			txtYear.setColumns(10);
+			txtYear.addActionListener(
+					new ActionListener(){
+						public void actionPerformed(ActionEvent ev){
+							year= txtYear.getText();
+							y = Integer.parseInt(year);
+						}
+					}
+					);
+			
+			
+			txtHorsePower = new JTextField();
+			txtHorsePower.setText("Horse Power");
+			txtHorsePower.setColumns(10);
+			txtHorsePower.addActionListener(
+					new ActionListener(){
+						public void actionPerformed(ActionEvent ev){
+							hp= txtHorsePower.getText();
+							h = Integer.parseInt(hp);
+						}
+					}
+					);
+			
+			
+			txtTo = new JTextField();
+			txtTo.setText("0 to 60");
+			txtTo.setColumns(10);
+			txtTo.addActionListener(
+					new ActionListener(){
+						public void actionPerformed(ActionEvent ev){
+							zerot60= txtTo.getText();
+							z = Integer.parseInt(zerot60);
+						}
+					}
+					);
+			
+			txtPrice = new JTextField();
+			txtPrice.setText("Price");
+			txtPrice.setColumns(10);
+			txtPrice.addActionListener(
+					new ActionListener(){
+						public void actionPerformed(ActionEvent ev){
+							price= txtPrice.getText();
+							p = Integer.parseInt(price);
+						}
+					}
+					);
+			//myDB = new database();
+			
+			JButton btnNewButton = new JButton("Add car");
+			btnNewButton.addActionListener(new ActionListener(){
+
+				@Override
+				public void actionPerformed(ActionEvent event) {
+					carList.add(new car(txtManufacturer.getText(), txtModel.getText(),Integer.parseInt(txtYear.getText()) , Integer.parseInt(txtHorsePower.getText()), Integer.parseInt(txtTo.getText()), Integer.parseInt(txtPrice.getText())));
+					myDB = new database();
+					car myCar = carList.get(0);
+					myDB.addData(myCar);
+				}
+				
+			});
+			
+			txtSearch = new JTextField();
+			txtSearch.setText("Search");
+			txtSearch.setColumns(10);
+			txtSearch.addActionListener(new ActionListener(){
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					searchParam.equals(txtSearch.getText());
+					
+				}
+				
+			});
+			comboBox_1 = new JComboBox();
+			comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"Manufacturer", "Model", "Year", "Horse Power", "0 to 60", "Price"}));
+			comboBox_1.setMaximumRowCount(6);
+			comboBox_1.addActionListener(new ActionListener(){
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					userChoice.equals((String)comboBox_1.getSelectedItem());
+					switch(userChoice){
+					case "Manufacturer":
+						userChoice.equals(manuf);
+						break;
+					case "Model":
+						userChoice.equals(model);
+						break;
+					case "Year":
+						userChoice.equals(year);
+						break;
+					case "Horse Power":
+						userChoice.equals(hp);
+						break;
+					case "0 to 60":
+						userChoice.equals(zerot60);
+						break;
+					case "Price":
+						userChoice.equals(price);
+						break;
+					default: userChoice.equals(price);
+					}
+				}
+				
+			});
+			
+			JButton btnNewButton_1 = new JButton("Search button");
+			btnNewButton_1.addActionListener( new ActionListener()
+			{
+			    public void actionPerformed(ActionEvent e)
+			    {
+			       // myDB.search(txtSearch.getText(), userChoice);
+			        //JOptionPane.showMessageDialog(null, myDB.search(txtSearch.getText(), userChoice));
+			    	myDB = new database();
+			    	JFrame frame2 = new JFrame("Results");
+			    	frame2.setVisible(true);
+			    	frame2.setSize(300, 300);
+			    	JLabel label = new JLabel();
+			    	JPanel panel = new JPanel();
+			    	JTextField text = new JTextField();
+			    	text.setText(myDB.search(userChoice, txtSearch.getText()));
+			    	frame2.add(panel);
+			    	panel.add(label);
+			    	panel.add(text);
+			    }
+			});
+			
+			 txtpnSortBy = new JTextField();
+			txtpnSortBy.setText("Sort By:");
+			
+			JComboBox comboBox = new JComboBox();
+			comboBox.setModel(new DefaultComboBoxModel(new String[] {"Manufacturer", "Model", "Year", "Horse Power", "0 to 60", "Price"}));
+			comboBox.setMaximumRowCount(6);
+			comboBox.addActionListener(new ActionListener(){
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					userChoice = (String)comboBox.getSelectedItem();
+					switch(userChoice){
+					case "Manufacturer":
+						userChoice.equals(manuf);
+						break;
+					case "Model":
+						userChoice.equals(model);
+						break;
+					case "Year":
+						userChoice.equals(year);
+						break;
+					case "Horse Power":
+						userChoice.equals(hp);
+						break;
+					case "0 to 60":
+						userChoice.equals(zerot60);
+						break;
+					case "Price":
+						userChoice.equals(price);
+						break;
+					//default: userChoice.equals(manuf);
+					}
+				}
+				
+			});
+			
+			JButton btnSort = new JButton("Sort");
+			btnSort.addActionListener( new ActionListener()
+			{
+			    public void actionPerformed(ActionEvent e)
+			    {
+			    	myDB = new database();
+			    	JFrame frame = new JFrame();
+			        //myDB.sort(userChoice);
+			    	JFrame frame2 = new JFrame("Results");
+			    	frame2.setVisible(true);
+			    	frame2.setSize(500, 500);
+			    	JLabel label = new JLabel();
+			    	JPanel panel = new JPanel();
+			    	JTextArea text = new JTextArea(myDB.sort(userChoice));
+			    	frame2.add(panel);
+			    	panel.add(label);
+			    	panel.add(text);
+			    }
+			});
+			
+			
+			JButton btnNewButton_2 = new JButton("Copy database to file");
+			btnNewButton_2.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+					makeFile file = new makeFile();
+				}
+			});
+			
+			JButton btnNewButton_3 = new JButton("Get Stig Quote");
+			btnNewButton_3.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+					JFrame frame2 = new JFrame("Results");
+					stig stig = new stig();
+			    	frame2.setVisible(true);
+			    	frame2.setSize(1000, 500);
+			    	JLabel label = new JLabel();
+			    	JPanel panel = new JPanel();
+			    	JTextField text = new JTextField();
+			    	text.setText(stig.getQuote());
+			    	frame2.add(panel);
+			    	panel.add(label);
+			    	panel.add(text);
+				}
+			});
+			
+			
+			GroupLayout groupLayout = new GroupLayout(getContentPane());
+			groupLayout.setHorizontalGroup(
+				groupLayout.createParallelGroup(Alignment.LEADING)
+					.addGroup(groupLayout.createSequentialGroup()
+						.addGap(7)
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+							.addGroup(groupLayout.createSequentialGroup()
+								.addComponent(btnNewButton_2, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
+								.addContainerGap())
+							.addGroup(groupLayout.createSequentialGroup()
+								.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+									.addGroup(groupLayout.createSequentialGroup()
+										.addComponent(txtpnSortBy, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(ComponentPlacement.UNRELATED)
+										.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addGap(59)
+										.addComponent(btnSort))
+									.addGroup(groupLayout.createSequentialGroup()
+										.addGap(88)
+										.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+											.addGroup(groupLayout.createSequentialGroup()
+												.addComponent(comboBox_1, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
+												.addGap(45)
+												.addComponent(txtSearch, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addGap(18)
+												.addComponent(btnNewButton_1))
+											.addGroup(groupLayout.createSequentialGroup()
+												.addComponent(txtManufacturer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addGap(41)
+												.addComponent(txtModel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addGap(26)
+												.addComponent(txtYear, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)))))
+								.addPreferredGap(ComponentPlacement.UNRELATED)
+								.addComponent(txtHorsePower, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
+								.addGap(18)
+								.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+									.addGroup(groupLayout.createSequentialGroup()
+										.addComponent(btnNewButton_3)
+										.addContainerGap())
+									.addGroup(groupLayout.createSequentialGroup()
+										.addComponent(txtTo, GroupLayout.PREFERRED_SIZE, 61, GroupLayout.PREFERRED_SIZE)
+										.addGap(18)
+										.addComponent(txtPrice, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(ComponentPlacement.RELATED, 275, Short.MAX_VALUE)
+										.addComponent(btnNewButton)
+										.addGap(27))))))
+			);
+			groupLayout.setVerticalGroup(
+				groupLayout.createParallelGroup(Alignment.LEADING)
+					.addGroup(groupLayout.createSequentialGroup()
+						.addGap(68)
+						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+							.addComponent(txtManufacturer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(txtModel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(txtYear, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(txtHorsePower, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(txtTo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(txtPrice, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(btnNewButton))
+						.addGap(45)
+						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+							.addComponent(btnNewButton_1)
+							.addComponent(txtSearch, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(comboBox_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGap(31)
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+							.addComponent(txtpnSortBy, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnSort)))
+						.addGap(8)
+						.addComponent(btnNewButton_3)
+						.addGap(61)
+						.addComponent(btnNewButton_2)
+						.addContainerGap(97, Short.MAX_VALUE))
+			);
+			getContentPane().setLayout(groupLayout);
+			
+		}
+	}
+
+
