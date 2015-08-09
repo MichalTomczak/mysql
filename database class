@@ -1,0 +1,361 @@
+package mysql;
+
+import java.sql.*;
+import java.util.*;
+import javax.swing.*;
+import java.awt.*;
+public class database extends JFrame{ 
+
+	private String manu;
+	private String model;
+	private String y;
+	private String z;
+	private String p;
+	private String h;
+	private String manufac;
+	private String model_2;
+	private String year_2;
+	private String hp_2;
+	private String zt6_2;
+	private String price_2;
+	private String result;
+	private ArrayList<car> carList = new ArrayList<car>();
+	public database(){
+		
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			//System.out.println("worked");
+		}
+		catch(ClassNotFoundException e){
+			System.out.println("Not found");
+		}
+		try{
+			//get a connectoin to database
+			
+			Connection myCon = DriverManager.getConnection("jdbc:mysql://localhost/cars", "root", "");
+			
+			//create a statement
+			Statement myStatement = myCon.createStatement();
+			//execute SQL query
+			ResultSet myRs = myStatement.executeQuery("SELECT * FROM `top gear`");
+			//process result set
+			//carSet = new TreeSet();
+			while(myRs.next()){
+				System.out.println(myRs.getString("Manufacturer") + " " + myRs.getString("Model") + " " +  myRs.getString("Horse Power"));
+				//carSet.add(new car(myRs.getString("Manufacturer"), myRs.getString("Model"), (int)myRs.getInt("Year"), myRs.getInt("Horse Power"), myRs.getInt("0 to 60"), myRs.getInt("Price")));
+				}
+			//System.out.println(carSet);
+			}
+		catch(SQLException ex){
+				System.out.println("additoin unsuccessful");
+			}
+		catch(Exception e){
+			System.out.println("Error " + e);
+			//e.printStackTrace();
+		}
+		}//end of database()
+		
+
+			
+	
+	 public void addData(car myCar){
+		 try{
+			 Connection myCon = DriverManager.getConnection("jdbc:mysql://localhost/cars", "root", "");
+			/*/insert new entry
+				String manufac, model, year, hp, price, zeroto60 = null;
+				Scanner scan = new Scanner(System.in);
+				System.out.println("Enter a manufacturer ");
+				manufac = scan.nextLine();
+				System.out.println("Enter a model ");
+				model = scan.nextLine();
+				System.out.println("Enter a year ");
+				year = scan.nextLine();
+				System.out.println("Enter Horse Power ");
+				hp = scan.nextLine();
+				System.out.println("Enter a price ");
+				price = scan.nextLine();
+				System.out.println("Enter the acceleration in 0 to 60 ");
+				zeroto60 = scan.nextLine();*/
+				
+			// int year = myCar.getYear();
+			 int year;
+			 int hp;
+			 int price;
+			 int zerot60;
+			 //y = Integer.toString(year);
+			 
+				String sql = "INSERT INTO `top gear`(`Manufacturer`, `Model`, `Year`, `Horse Power`, `Price`, `0 to 60`) VALUES (?,?,?,?,?,?)";
+				try{
+				PreparedStatement preparedstatement = myCon.prepareStatement(sql);
+				preparedstatement.setString(1, manu = myCar.getManuf());
+				preparedstatement.setString(2, model = myCar.getModel());
+				preparedstatement.setInt(3, year = myCar.getYear());
+				preparedstatement.setInt(4, hp = myCar.gethp());
+				preparedstatement.setInt(5, price = myCar.getPrice());
+				preparedstatement.setInt(6, zerot60 = myCar.get0t60());
+				preparedstatement.executeUpdate();
+				
+				myCon.close();
+		 
+				}
+				catch(Exception e){e.printStackTrace();}
+		 }//end of try
+		 catch(Exception e){
+			 
+		 }//end of catch
+	 
+	
+	 }//end of add()
+	 public String search(String selected, String userEntry){
+		 try{
+		 //String manufac, model, year, hp, price, zeroto60 = null;
+		 Connection myCon = DriverManager.getConnection("jdbc:mysql://localhost/cars", "root", "");
+	//		Scanner scan = new Scanner(System.in);
+			menu();
+			//create a statement
+			Statement myStatement = myCon.createStatement();
+			//execute SQL query
+			
+			//process result set
+			
+			//select what to search
+			if("Manufacturer".equals(selected)){	
+				PreparedStatement prepStat = myCon.prepareStatement("SELECT * FROM `top gear` WHERE `Manufacturer` = ?");
+				//String sql =  "SELECT * FROM `top gear` WHERE `Manufacturer` = " + '"' + userEntry + '"';
+				//ResultSet myRs = myStatement.executeQuery(sql);
+				prepStat.setString(1, userEntry);
+				ResultSet myRs = prepStat.executeQuery();
+				while(myRs.next()){
+					int year = myRs.getInt("Year"); y = Integer.toString(year);
+					 int zt6 = myRs.getInt("0 to 60"); z = Integer.toString(zt6);
+					 int price = myRs.getInt("Price"); p = Integer.toString(price);
+					 int hp = myRs.getInt("Horse Power"); h = Integer.toString(hp);
+					 model = myRs.getString("Model");
+					 manu =myRs.getString("Manufacturer");  
+					 carList.add(new car(manu, model, year, hp, zt6, price));
+					 return (carList.toString());
+					}
+				myRs.close();
+				}
+			else if("Model".equals(selected)){
+				String sql =  "SELECT * FROM `top gear` WHERE `Model` = '" + userEntry +"'";
+				ResultSet myRs = myStatement.executeQuery(sql);
+				while(myRs.next()){
+					int year = myRs.getInt("Year"); y = Integer.toString(year);
+					 int zt6 = myRs.getInt("0 to 60"); z = Integer.toString(zt6);
+					 int price = myRs.getInt("Price"); p = Integer.toString(price);
+					 int hp = myRs.getInt("Horse Power"); h = Integer.toString(hp);
+					 model = myRs.getString("Model");
+					 manu =myRs.getString("Manufacturer");  
+					 carList.add(new car(manu, model, year, hp, zt6, price));
+					 return (carList.toString());
+				}//end of while
+				myRs.close();
+				}
+			else if("Year".equals(selected)){
+				String sql =  "SELECT * FROM `top gear` WHERE `Year` = '" + userEntry +"'";
+				ResultSet myRs = myStatement.executeQuery(sql);
+				while(myRs.next()){
+					int year = myRs.getInt("Year"); y = Integer.toString(year);
+					 int zt6 = myRs.getInt("0 to 60"); z = Integer.toString(zt6);
+					 int price = myRs.getInt("Price"); p = Integer.toString(price);
+					 int hp = myRs.getInt("Horse Power"); h = Integer.toString(hp);
+					 model = myRs.getString("Model");
+					 manu =myRs.getString("Manufacturer");  
+					 carList.add(new car(manu, model, year, hp, zt6, price));
+					 return (carList.toString());
+				}
+				myRs.close();
+				}
+			else if("Horse Power".equals(selected)){
+				String sql =  "SELECT * FROM `top gear` WHERE `Horse Power` = '" + userEntry +"'";
+				ResultSet myRs = myStatement.executeQuery(sql);
+				while(myRs.next()){
+					int year = myRs.getInt("Year"); y = Integer.toString(year);
+					 int zt6 = myRs.getInt("0 to 60"); z = Integer.toString(zt6);
+					 int price = myRs.getInt("Price"); p = Integer.toString(price);
+					 int hp = myRs.getInt("Horse Power"); h = Integer.toString(hp);
+					 model = myRs.getString("Model");
+					 manu =myRs.getString("Manufacturer");  
+					 carList.add(new car(manu, model, year, hp, zt6, price));
+					 return (carList.toString());
+				}
+				myRs.close();
+				}
+			else if("Price".equals(selected)){
+				String sql =  "SELECT * FROM `top gear` WHERE `Price` = '" + userEntry +"'";
+				ResultSet myRs = myStatement.executeQuery(sql);
+				while(myRs.next()){
+					int year = myRs.getInt("Year"); y = Integer.toString(year);
+					 int zt6 = myRs.getInt("0 to 60"); z = Integer.toString(zt6);
+					 int price = myRs.getInt("Price"); p = Integer.toString(price);
+					 int hp = myRs.getInt("Horse Power"); h = Integer.toString(hp);
+					 model = myRs.getString("Model");
+					 manu =myRs.getString("Manufacturer");  
+					 carList.add(new car(manu, model, year, hp, zt6, price));
+					 return (carList.toString());
+				}
+				myRs.close();
+				}
+			else if("0 to 60".equals(selected)){
+				String sql =  "SELECT * FROM `top gear` WHERE `0 to 60` = '" + userEntry +"'";
+				ResultSet myRs =myStatement.executeQuery(sql);
+				while(myRs.next()){
+					int year = myRs.getInt("Year"); y = Integer.toString(year);
+					 int zt6 = myRs.getInt("0 to 60"); z = Integer.toString(zt6);
+					 int price = myRs.getInt("Price"); p = Integer.toString(price);
+					 int hp = myRs.getInt("Horse Power"); h = Integer.toString(hp);
+					 model = myRs.getString("Model");
+					 manu =myRs.getString("Manufacturer");  
+					 carList.add(new car(manu, model, year, hp, zt6, price));
+					 return (carList.toString());
+				}
+				myRs.close();
+				}
+		 }//end of try
+		 catch(SQLException ex){
+			 System.out.println("error search");
+			 
+		 }
+		 
+		 
+		 return (carList.toString() + "\n");
+		 //return manufac + " " + model_2 + " " + year_2 + " " + hp_2 + " " + zt6_2 + " " + price_2;
+			
+	 }
+	 public void menu(){
+			System.out.println("1: Manufacturer");
+			System.out.println("2: Model");
+			System.out.println("3: Year");
+			System.out.println("4: Horse Power");
+			System.out.println("5: Price");
+			System.out.println("6: 0 to 60");
+		}
+	 public String sort(String myChoice){
+		 Connection myCon = null;
+		 Statement myStat = null;
+		 try{
+		 //register JDBC Driver
+		 Class.forName("com.mysql.jdbc.Driver");
+		 
+		 //create connection
+		myCon = DriverManager.getConnection("jdbc:mysql://localhost/cars", "root", "");
+		 //execute query
+		 myStat = myCon.createStatement();
+		 //get records in ascending order
+		 
+		 	if("Manufacturer".equals(myChoice)){
+		 		String sql ="SELECT * FROM `top gear` ORDER BY `Manufacturer` ASC";
+				 ResultSet rs = myStat.executeQuery(sql);
+				 while(rs.next()){
+					 int year = rs.getInt("Year"); y = Integer.toString(year);
+					 int zt6 = rs.getInt("0 to 60"); z = Integer.toString(zt6);
+					 int price = rs.getInt("Price"); p = Integer.toString(price);
+					 int hp = rs.getInt("Horse Power"); h = Integer.toString(hp);
+					 model = rs.getString("Model");
+					 manu =rs.getString("Manufacturer");  
+					 carList.add(new car(manu, model, year, hp, zt6, price));
+					 //return (carList.toString());
+				 }//end of while
+				 rs.close();
+				 }//end of if
+		 	else if("Model".equals(myChoice)){
+		 		String sql2 ="SELECT * FROM `top gear` ORDER BY `Model` ASC";
+				 ResultSet rs1 = myStat.executeQuery(sql2);
+				 while(rs1.next()){
+					 int year = rs1.getInt("Year"); y = Integer.toString(year);
+					 int zt6 = rs1.getInt("0 to 60"); z = Integer.toString(zt6);
+					 int price = rs1.getInt("Price"); p = Integer.toString(price);
+					 int hp = rs1.getInt("Horse Power"); h = Integer.toString(hp);
+					 model = rs1.getString("Model");
+					 manu =rs1.getString("Manufacturer"); 
+					 carList.add(new car(manu, model, year, hp, zt6, price));
+					// return manu + " "  + model + " " + y + " " + " " + h + " " + z + " " + p;
+				 }
+				 rs1.close();
+		 	}
+		 	else if("Year".equals(myChoice)){
+		 		String sql3 ="SELECT * FROM `top gear` ORDER BY `Year` ASC";
+				 ResultSet rs2 = myStat.executeQuery(sql3);
+				 while(rs2.next()){
+					 int year = rs2.getInt("Year"); y = Integer.toString(year);
+					 int zt6 = rs2.getInt("0 to 60"); z = Integer.toString(zt6);
+					 int price = rs2.getInt("Price"); p = Integer.toString(price);
+					 int hp = rs2.getInt("Horse Power"); h = Integer.toString(hp);
+					 model = rs2.getString("Model");
+					 manu =rs2.getString("Manufacturer"); 
+					 carList.add(new car(manu, model, year, hp, zt6, price));
+				 }
+				 rs2.close();
+		 	}
+		 	else if("Horse Power".equals(myChoice)){
+		 		String sql4 ="SELECT * FROM `top gear` ORDER BY `Horse Power` ASC";
+				 ResultSet rs3 = myStat.executeQuery(sql4);
+				 while(rs3.next()){
+					 int year = rs3.getInt("Year"); y = Integer.toString(year);
+					 int zt6 = rs3.getInt("0 to 60"); z = Integer.toString(zt6);
+					 int price = rs3.getInt("Price"); p = Integer.toString(price);
+					 int hp = rs3.getInt("Horse Power"); h = Integer.toString(hp);
+					 model = rs3.getString("Model");
+					 manu =rs3.getString("Manufacturer"); 
+					 carList.add(new car(manu, model, year, hp, zt6, price));
+				 }
+				 rs3.close();
+		 	}
+		 	else if("0 to 60".equals(myChoice)){
+		 		String sql5 ="SELECT * FROM `top gear` ORDER BY `0 to 60` ASC";
+				 ResultSet rs4 = myStat.executeQuery(sql5);
+				 while(rs4.next()){
+					 int year = rs4.getInt("Year"); y = Integer.toString(year);
+					 int zt6 = rs4.getInt("0 to 60"); z = Integer.toString(zt6);
+					 int price = rs4.getInt("Price"); p = Integer.toString(price);
+					 int hp = rs4.getInt("Horse Power"); h = Integer.toString(hp);
+					 model = rs4.getString("Model");
+					 manu =rs4.getString("Manufacturer"); 
+					 carList.add(new car(manu, model, year, hp, zt6, price));
+				 }
+				 rs4.close();
+		 	}
+		 	else if("Price".equals(myChoice)){
+		 		String sql6 ="SELECT * FROM `top gear` ORDER BY `Price` ASC";
+				 ResultSet rs5 = myStat.executeQuery(sql6);
+				 while(rs5.next()){
+					 int year = rs5.getInt("Year"); y = Integer.toString(year);
+					 int zt6 = rs5.getInt("0 to 60"); z = Integer.toString(zt6);
+					 int price = rs5.getInt("Price"); p = Integer.toString(price);
+					 int hp = rs5.getInt("Horse Power"); h = Integer.toString(hp);
+					 model = rs5.getString("Model");
+					 manu =rs5.getString("Manufacturer");
+					 carList.add(new car(manu, model, year, hp, zt6, price));
+				 }
+				 rs5.close();
+		 	}
+		 
+		 System.out.println("Getting cars in ascending order by year");	
+		 }//end of try
+		 
+		 catch(SQLException ex){
+			 ex.printStackTrace();
+		 }
+		 catch(Exception e){
+			 e.printStackTrace();
+		 }
+		 finally{
+			 try{
+				 if(myStat != null)
+					 myCon.close();
+			 }
+			 catch(SQLException se){}
+			 try{
+				if( myCon != null)
+					myCon.close();
+			 }
+			 catch(SQLException se){
+				 se.printStackTrace();
+			 }
+		 }//end finally
+		return(carList.toString() + "\n");
+	 }//end of sort
+		
+}//end of class
+
